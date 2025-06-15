@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <string.h>  // for strerror()
 #include <stdexcept> // for exception
+#include <exception>
 #include <fcntl.h>
 
 #define FCLOSE_SUCCESS 0
