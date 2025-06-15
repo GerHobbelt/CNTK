@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>nietras.CNTK.Deps.Cuda.cublasLt</id>
+    <version>2.9.0</version>
+    <title>Microsoft CNTK, Cuda dependencies</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft, CNTKTeam</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>http://www.cntk.ai/</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</iconUrl>
+    <repository type="git" url="https://github.com/nietras/CNTK.git" />
+    <description>Microsoft Cognitive Toolkit Libraries, Cuda dependencies</description>
+    <summary>This NuGet package provides Cuda cublasLt dependencies for CNTK GPU build.</summary>
+    <releaseNotes>CUDA 11.8</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+  </metadata>
+</package>

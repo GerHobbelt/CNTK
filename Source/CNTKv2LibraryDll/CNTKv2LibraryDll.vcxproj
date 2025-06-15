@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" InitialTargets="CheckDependencies" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.props" Condition="Exists('..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -35,6 +36,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CNTKv2LibraryDll</RootNamespace>
     <ProjectName>CNTKv2LibraryDll</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\CNTK.Cpp.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -58,6 +60,37 @@
   </PropertyGroup>
   <PropertyGroup Condition="$(ReleaseBuild)">
     <TargetName>Cntk.Core$(OutputSuffix)-$(CntkComponentVersion)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug_CpuOnly|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug_UWP|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release_CpuOnly|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release_NoOpt|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release_UWP|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>true</VcpkgUseMD>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="$(IsUWP)">
     <ClCompile>
@@ -86,7 +119,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>ONNX_NAMESPACE=onnx;ONNX_ML=1;ONNX_V1_OPSCHEMA_COMPAT;CNTKV2LIBRARYDLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;PLATFORM_WINDOWS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4610;4512;4510;4267;4127;4125;4100;4456;4189;4996;4503;4146</DisableSpecificWarnings>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -105,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalOptions>/d2Zi+ /bigobj %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DisableSpecificWarnings>4800;4610;4512;4510;4267;4127;4125;4100;4456;4189;4996;4503;4146</DisableSpecificWarnings>
     </ClCompile>
@@ -137,6 +170,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(CudaLibPath)</AdditionalLibraryDirectories>
+      <ForceFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MultiplyDefinedSymbolOnly</ForceFileOutput>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(NvmlDll)" xcopy /I /D /Y "$(NvmlDll)" "$(TargetDir)"</Command>
@@ -356,21 +390,33 @@
   </ItemGroup>
   <Target Name="ProtoGen" Inputs="@(Proto)" Outputs="@(Proto->'%(RelativeDir)%(Filename).pb.cc')">
     <Message Text="Compiling %(Proto.Identity)" />
-    <Exec Command="$(PROTOBUF_PATH)\bin\protoc --proto_path=$(ProjectDir)%(Proto.RelativeDir) --cpp_out=$(ProjectDir)%(Proto.RelativeDir) %(Proto.FullPath)" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="$(ProtobufToolDir)\protoc --proto_path=$(ProjectDir)%(Proto.RelativeDir) --cpp_out=$(ProjectDir)%(Proto.RelativeDir) %(Proto.FullPath)" WorkingDirectory="$(ProjectDir)" />
   </Target>
   <ItemGroup>
     <ProtoONNX Include="proto\onnx\onnxruntime\onnxruntime\core\protobuf\onnx-ml.proto" />
     <ProtoONNX Include="proto\onnx\onnxruntime\onnxruntime\core\protobuf\onnx-operators-ml.proto" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Target Name="ProtoONNXGen" Inputs="@(ProtoONNX)" Outputs="@(ProtoONNX->'%(RelativeDir)%(Filename).pb.cc')">
     <Message Text="Compiling %(ProtoONNX.Identity)" />
-    <Exec Command="$(PROTOBUF_PATH)\bin\protoc --proto_path=$(ProjectDir)proto\onnx\onnxruntime\onnxruntime\core\protobuf --cpp_out=$(ProjectDir)proto\onnx\onnxruntime\onnxruntime\core\protobuf %(ProtoONNX.FullPath)" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="$(ProtobufToolDir)\protoc --proto_path=$(ProjectDir)proto\onnx\onnxruntime\onnxruntime\core\protobuf --cpp_out=$(ProjectDir)proto\onnx\onnxruntime\onnxruntime\core\protobuf %(ProtoONNX.FullPath)" WorkingDirectory="$(ProjectDir)" />
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="Build" Condition="$(HasProtobuf)" Outputs="$(TargetPath)" DependsOnTargets="ProtoGen;ProtoONNXGen;$(BuildDependsOn)" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.targets" Condition="Exists('..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.targets')" />
+  </ImportGroup>
   <Target Name="CheckDependencies">
     <Warning Condition="!$(HasProtobuf)" Text="CNTKv2LibraryDll requires Protocol Buffers to build. Please see https://docs.microsoft.com/en-us/cognitive-toolkit/Setup-CNTK-on-Windows#protobuf for installation instructions." />
     <Error Condition="!$(HasBoost)" Text="CNTKv2LibraryDll requires the Boost library to build. Please see https://docs.microsoft.com/en-us/cognitive-toolkit/Setup-CNTK-on-Windows#boost for installation instructions." />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.props'))" />
+    <Error Condition="!Exists('..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0\build\native\vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.targets'))" />
   </Target>
 </Project>

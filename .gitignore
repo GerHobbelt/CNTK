@@ -236,24 +236,22 @@ bindings/python/doc/modules.rst
 bindings/python/doc/_build
 
 # Auto-generated sources from CNTK.proto
-Source/CNTKv2LibraryDll/proto/CNTK.pb.cc
-Source/CNTKv2LibraryDll/proto/CNTK.pb.h
+#Source/CNTKv2LibraryDll/proto/CNTK.pb.cc
+#Source/CNTKv2LibraryDll/proto/CNTK.pb.h
 
 # Auto-generated sources from ONNX proto
-Source/CNTKv2LibraryDll/proto/onnx/protobuf/graph.pb.cc
-Source/CNTKv2LibraryDll/proto/onnx/protobuf/graph.pb.h
-Source/CNTKv2LibraryDll/proto/onnx/protobuf/onnx-ml.pb.cc
-Source/CNTKv2LibraryDll/proto/onnx/protobuf/onnx-ml.pb.h
+#Source/CNTKv2LibraryDll/proto/onnx/graph.pb.cc
+#Source/CNTKv2LibraryDll/proto/onnx/graph.pb.h
+#Source/CNTKv2LibraryDll/proto/onnx/onnx-ml.pb.cc
+#Source/CNTKv2LibraryDll/proto/onnx/onnx-ml.pb.h
 
 bindings/python/cntk/c_plus_c.mod
 bindings/python/cntk/i_plus_c_0.mod
 bindings/python/cntk/i_plus_i_0.mod
 
 # CSharp bindings
-bindings/csharp/Swig/cntk_cs_wrap.h
-bindings/csharp/Swig/cntk_cs_wrap.cxx
-bindings/csharp/Swig/cntk_cs_wrap.cxx
-bindings/csharp/Swig/Generated/*
+!bindings/csharp/Swig/Generated/*/Debug
+!bindings/csharp/Swig/Generated/*/Release
 bindings/csharp/CNTKLibraryManagedDll/build/Linux/Debug/CSharpBindings/CMakeFiles/CSharpBindings.dir/depend.make
 bindings/csharp/CNTKLibraryManagedDll/build/Linux/Release/CSharpBindings/CMakeFiles/CSharpBindings.dir/depend.make
 
@@ -352,3 +350,10 @@ cscope.out
 /Source/CNTKv2LibraryDll/proto/onnx/onnx/protobuf/onnx-operators-ml.pb.cc
 /Source/CNTKv2LibraryDll/proto/onnx/onnx/protobuf/onnx-ml.pb.h
 /Source/CNTKv2LibraryDll/proto/onnx/onnx/protobuf/onnx-ml.pb.cc
+
+# nuget packages spec
+!PackageSpecs/*/build
+PackageSpecs/*/*.dll
+PackageSpecs/*.nupkg
+/vcpkg_installed
+/vcpkg.C.ProgramFiles.MicrosoftVisualStudio.2022.Preview.VC.vcpkg.1.0.0.nupkg
