@@ -358,7 +358,7 @@ namespace CNTK
                     auto convolutionNode = node->As<ConvolutionNode<ElementType>>();
 
                     // Some legacy CNTK v1 models store the convolution filter parameters in 2D form with the trailing
-                    // tensor dimensions flattended into the column dimension of the 2D paramater matrix
+                    // tensor dimensions flattended into the column dimension of the 2D parameter matrix
                     // We need to recover the actual tensor shape of the parameter in this case
                     auto& convolutionMapVar = inputVars[0];
                     if (convolutionNode->IsConvolution2D() || (convolutionMapVar.Shape().Rank() == 2))
